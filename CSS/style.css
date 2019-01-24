@@ -1,3 +1,58 @@
+body {
+  background-color: rgb(38, 70, 50);
+  font-size: 18px;
+  font-family: "Rubik", sans-serif;
+  color: white;
+}
+
+.card {
+  background: rgba(21, 38, 30, 0.4);
+}
+
+tr {
+  border-color:transparent;
+}
+
+td {
+  width: 100px;
+}
+
+.td-align {
+  text-align: center;
+}
+
+.setcenter {
+  align-items: center;
+  justify-content:center;
+}
+
+.icon {
+  width: 30px;
+}
+
 img {
   border-radius: 100%;
+  width: 80px;
+  background-color: aliceblue;
+  vertical-align: middle;
+}
+
+#badge {
+  position: relative;
+  right: -80%;
+  top: 36px;
+  z-index: 1;
+}
+
+#badge img {
+  border-radius: 0px !important;
+  background-color: transparent;
+  width: 60px;
+}
+
+#ranking {
+  position: absolute;
+  left: 23px;
+  top: 2px;
+  z-index: 2;
 }
