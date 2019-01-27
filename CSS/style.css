@@ -50,7 +50,7 @@ img {
   width: 60px;
 }
 
-#ranking {
+.ranking {
   position: absolute;
   left: 23px;
   top: 2px;

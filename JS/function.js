@@ -6,18 +6,23 @@ $(document).ready(function () {
 
   function getData() {
     $(`#table-content`).html(`<h4 class="grey-text text-darken-2">載入中...</h4>`);
-    $.ajax({
-      url: `https://testsite.staging.seekrtech.com/forest_rankings?n=19&last_pos=${startnum}`,
-      type: "GET",
-      success: function (result) {
-        console.log(result);
-        render(result);
-      },
-      error: function (error) {
-        console.log("error:", error);
-        $(`#table-content`).html(`<h4 class="red-text text-darken-2">伺服器發生錯誤，請稍後再試</h4>`);
-      }
-    });
+    if (startnum < 100) {
+      $.ajax({
+        url: `https://testsite.staging.seekrtech.com/forest_rankings?n=19&last_pos=${startnum}`,
+        type: "GET",
+        success: function (result) {
+          console.log(result);
+          render(result);
+        },
+        error: function (error) {
+          console.log("error:", error);
+          $(`#table-content`).html(`<h4 class="red-text text-darken-2">伺服器發生錯誤，請稍後再試</h4>`);
+        }
+      });
+    } else {
+      alert("已經沒有排名了！");
+      window.location.reload();
+    }
   }
   getData();
 
@@ -29,7 +34,7 @@ $(document).ready(function () {
         str += `
         <div id="badge">
           <img src="./icon/leaderboard_badge.png" >
-          <h id="ranking">${ranking}</h>
+          <h class="ranking">${ranking}</h>
         </div>
         <div class="card">
         <table>
@@ -49,7 +54,7 @@ $(document).ready(function () {
         str += `
         <div id="badge">
           <img src="./icon/leaderboard_badge.png" >
-          <h id="ranking">${ranking}</h>
+          <h class="ranking">${ranking}</h>
         </div>
         <div class="card">
         <table>
@@ -72,6 +77,7 @@ $(document).ready(function () {
   }
 
   var scrollTimer;
+  var scrolltimes = 1; // 捲動次數
   $(window).scroll(function () {
     if (scrollTimer) {
       clearTimeout(scrollTimer);
@@ -80,33 +86,12 @@ $(document).ready(function () {
     scrollTimer = setTimeout(function () {
       if ($(document).scrollTop() >= $(document).height() - $(window).height()) {
         startnum = startnum + 20;
-        console.log(startnum);
         getData();
+        $("html,body").animate({
+          scrollTop: 3520 * scrolltimes
+        }, 1000);
+        scrolltimes += 1;
       }
-    }, 300);
+    }, 1000);
   });
-
-  // $(window).scroll(function () {
-  //   //下面这句主要是获取网页的总高度，主要是考虑兼容性所以把Ie支持的documentElement也写了，这个方法至少支持IE8
-  //   var htmlHeight = $(document).height();
-  //   //clientHeight是网页在浏览器中的可视高度，
-  //   var clientHeight = $(window).height();
-  //   //scrollTop滚动条到顶部的垂直高度
-  //   var scrollTop = $(document).scrollTop();
-  //   //通过判断滚动条的top位置与可视网页之和与整个网页的高度是否相等来决定是否加载内容；
-  //   var he = scrollTop + clientHeight;
-  //   if (he >= htmlHeight * 0.7) {
-  //     addListMore();
-  //   }
-  //   //console.log("滚动条位置：" + scrollTop);
-  //   //console.log("可视高度：" + clientHeight);
-  //   //console.log("网页总高度" + htmlHeight);
-  // });
-  // function addListMore() {
-  //   console.log("加载更多");
-  //   startnum = startnum + 20;
-  //   console.log(startnum);
-  //   getData();
-  // }
-
 });
