@@ -1,10 +1,13 @@
 $(document).ready(function () {
   M.AutoInit();
+  var startnum = 0;
+  var str = "";
+  var ranking = 1;
 
   function getData() {
     $(`#table-content`).html(`<h4 class="grey-text text-darken-2">載入中...</h4>`);
     $.ajax({
-      url: `https://testsite.staging.seekrtech.com/forest_rankings?n=19&last_pos=0`,
+      url: `https://testsite.staging.seekrtech.com/forest_rankings?n=19&last_pos=${startnum}`,
       type: "GET",
       success: function (result) {
         console.log(result);
@@ -19,8 +22,6 @@ $(document).ready(function () {
   getData();
 
   function render(result) {
-    var str = "";
-    var ranking = 1;
     const element = result["ranking"];
     for (const inner_key in element) {
       const inner_element = element[inner_key];
@@ -69,4 +70,43 @@ $(document).ready(function () {
     }
     $(`#table-content`).html(str);
   }
+
+  var scrollTimer;
+  $(window).scroll(function () {
+    if (scrollTimer) {
+      clearTimeout(scrollTimer);
+      scrollTimer = undefined;
+    }
+    scrollTimer = setTimeout(function () {
+      if ($(document).scrollTop() >= $(document).height() - $(window).height()) {
+        startnum = startnum + 20;
+        console.log(startnum);
+        getData();
+      }
+    }, 300);
+  });
+
+  // $(window).scroll(function () {
+  //   //下面这句主要是获取网页的总高度，主要是考虑兼容性所以把Ie支持的documentElement也写了，这个方法至少支持IE8
+  //   var htmlHeight = $(document).height();
+  //   //clientHeight是网页在浏览器中的可视高度，
+  //   var clientHeight = $(window).height();
+  //   //scrollTop滚动条到顶部的垂直高度
+  //   var scrollTop = $(document).scrollTop();
+  //   //通过判断滚动条的top位置与可视网页之和与整个网页的高度是否相等来决定是否加载内容；
+  //   var he = scrollTop + clientHeight;
+  //   if (he >= htmlHeight * 0.7) {
+  //     addListMore();
+  //   }
+  //   //console.log("滚动条位置：" + scrollTop);
+  //   //console.log("可视高度：" + clientHeight);
+  //   //console.log("网页总高度" + htmlHeight);
+  // });
+  // function addListMore() {
+  //   console.log("加载更多");
+  //   startnum = startnum + 20;
+  //   console.log(startnum);
+  //   getData();
+  // }
+
 });
